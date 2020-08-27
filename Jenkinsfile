@@ -1,28 +1,25 @@
-node('master')
+node('master') 
 {
     stage('ContinuousDownload') 
     {
-         git 'https://github.com/selenium-saikrishna/maven.git'
+       git 'https://github.com/selenium-saikrishna/maven.git'
     }
     stage('ContinuousBuild') 
     {
-         sh label: '', script: 'mvn package'
+       sh label: '', script: 'mvn package'
     }
-    stage('ContinuousDeployment')
+    stage('ContinuousDeployment') 
     {
-        sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/ScriptedPipeline/webapp/target/webapp.war ubuntu@172.31.12.49:/var/lib/tomcat8/webapps/testenv.war'
+       sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/ScriptedPipeline/webapp/target/webapp.war ubuntu@172.31.14.52:/var/lib/tomcat8/webapps/testenv.war'
     }
-    stage('ContinuousTesting')
+    stage('ContinuousTesting') 
     {
         git 'https://github.com/selenium-saikrishna/FunctionalTesting.git'
         sh label: '', script: 'java -jar /home/ubuntu/.jenkins/workspace/ScriptedPipeline/testing.jar'
     }
-     stage('ContinuousDelivery')
+    stage('ContinuousIntegratioin') 
     {
-        input message: 'Waiting for Approval from the DM', submitter: 'Srinivas'
-        sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/ScriptedPipeline/webapp/target/webapp.war ubuntu@172.31.13.206:/var/lib/tomcat8/webapps/prodenv.war'
+       sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/ScriptedPipeline/webapp/target/webapp.war ubuntu@172.31.0.125:/var/lib/tomcat8/webapps/prodenv.war'
     }
-    
-    
 }
 
